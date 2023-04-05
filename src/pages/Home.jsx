@@ -15,7 +15,7 @@ function Home() {
 
   const [popup, setPopup] = React.useState(false);
 
-  const [cart, setCart] = React.useState([]);
+  const [cart, setCart] = React.useState([[null, null]]);
 
   useEffect(() => {
     if(localStorage.getItem('sebagai') === null) {
@@ -49,10 +49,10 @@ function Home() {
   }
   
   const addCartHandler = (id) => {
-    setCart([...cart, id]);
-    localStorage.setItem('cart', JSON.stringify([...cart, id]));
+    if(cart[0][0] == null) cart.pop();
+    setCart([...cart, [id, 1]]);
+    localStorage.setItem('cart', JSON.stringify([...cart, [id, 1]]));
   }
-
   
   return (
     <div className='min-h-screen bg-gray-600 text-white font-poppins relative '>
@@ -135,12 +135,12 @@ function Home() {
                                     </div>
                                     <div className='w-1/3 text-right'>
                                         {
-                                            cart.includes(item.id) &&
-                                            <button className={` bg-green-500 py-2 px-5 rounded duration-300`}>Added</button>
+                                            !cart.filter(i => i[0] === item.id).length > 0 &&
+                                            <button onClick={() => addCartHandler(item.id)} className={` hover:bg-green-500 py-2 px-5 rounded bg-gray-700 duration-300`}>Add +</button>
                                         }
                                         {
-                                            !cart.includes(item.id) &&
-                                            <button onClick={() => addCartHandler(item.id)} className={` hover:bg-green-500 py-2 px-5 rounded bg-gray-700 duration-300`}>Add +</button>
+                                            cart.filter(i => i[0] === item.id).length > 0 &&
+                                            <button className={` py-2 px-5 rounded bg-green-500 duration-300`}>Added</button>
                                         }
                                     </div>
                                 </div>
@@ -155,7 +155,7 @@ function Home() {
                 </div>
 
                 {
-                    cart.length > 0 &&
+                    cart.length > 0 && cart[0][0] !== null &&
                     <div className='fixed inset-x-0 bottom-0 mx-auto w-full md:w-2/6'>
                         <div className='w-full bg-green-500 py-10 px-4 md:px-10'>
                             <div className='flex justify-between text-lgf items-center text-center'>
@@ -167,13 +167,15 @@ function Home() {
                                         View Cart
                                     </Link>
                                 </div>
-                                <div className='w-2/6 text-center rounded-xl bg-green-600 py-2 px-3 font-bold'>
-                                    Rp { cart.reduce((acc, curr) => {
-                                        const data = allData.find(item => item.id === curr)
-                                        return acc + data.harga
-                                    }, 0) }
-
-                                </div>
+                                {
+                                    cart[0][0] !== null &&
+                                    <div className='w-2/6 text-center rounded-xl bg-green-600 py-2 px-3 font-bold'>
+                                        Rp { cart.reduce((acc, curr) => {
+                                            const data = allData.find(item => item.id === curr[0])
+                                            return acc + data.harga * curr[1]
+                                        }, 0) }
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
