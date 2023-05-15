@@ -60,7 +60,7 @@ const data = [
     },
     {
         "id": 2,
-        "nama": 'Nasi Goreng Kebuli Ayam',
+        "nama": "Nasi Goreng Kebuli Ayam",
         "gambar": img2,
         "deskripsi": 'Nasi Goreng, bumbu kebuli maknyoss, daging ayam suir, krupuk udang, tomat iris, timun iris',
         "kategori": 'Nasi Kebuli',
