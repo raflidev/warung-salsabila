@@ -3,7 +3,7 @@ import allData from '../data'
 import { Link } from 'react-router-dom';
 
 function Home() {
-  const [categories, setCategories] = React.useState(['Semua','Makanan', 'Minuman', 'Mie Salsabila', 'Katsu', 'Menu Kuah', 'Menu Ayam', 'Nasi Goreng Kebuli']);
+  const [categories, setCategories] = React.useState(['Semua', 'Minuman', 'Katsu', 'Menu Ayam', 'Nasi Kebuli', 'Mie Goreng', 'Menu Tambahan', 'Lainnya']);
   const [selectedCategory, setSelectedCategory] = React.useState(categories[0]);
   const [sebagai, setSebagai] = React.useState(['Reservasi', 'Delivery', 'Dine-in']);
   const [selectedSebagai, setSelectedSebagai] = React.useState(sebagai[0]);
@@ -36,6 +36,10 @@ function Home() {
         localStorage.setItem('alamat', alamat);
     }
     setPopup(false);
+  }
+
+  const rupiah = (number)=>{
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number).replace(/(\.|,)00$/g, '');
   }
 
   const handleFilter = (category) => {
@@ -131,7 +135,7 @@ function Home() {
                                     <div className='w-full md:w-full px-4 space-y-2'>
                                         <div className='text-xl md:text-2xl font-semibold'>{item.nama}</div>
                                         <div className='text-sm md:text-lg font-light'>Deskripsi</div>
-                                        <div className='font-semibold text-lg md:text-xl'>Rp {item.harga}</div>
+                                        <div className='text-lg font-bold'>{rupiah(item.harga)}</div>
                                     </div>
                                     <div className='w-1/3 text-right'>
                                         {
@@ -170,10 +174,10 @@ function Home() {
                                 {
                                     cart[0][0] !== null &&
                                     <div className='w-2/6 text-center rounded-xl bg-green-600 py-2 px-3 font-bold'>
-                                        Rp { cart.reduce((acc, curr) => {
+                                        { rupiah(cart.reduce((acc, curr) => {
                                             const data = allData.find(item => item.id === curr[0])
                                             return acc + data.harga * curr[1]
-                                        }, 0) }
+                                        }, 0)) }
                                     </div>
                                 }
                             </div>
